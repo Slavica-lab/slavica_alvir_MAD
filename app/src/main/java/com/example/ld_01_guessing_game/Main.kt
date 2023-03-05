@@ -1,51 +1,56 @@
 package com.example.ld_01_guessing_game
+/*Generate a random 4-digit number. The number must not contain repeating digits. Ask the user to guess the 4-digit number. The output should be in the format "n:m", where "n" is the number of digits guessed correctly regardless of their position, and "m" is the number of digits guessed correctly at their correct position. Here are some examples:
+Generated number: 8576
+•	User input: 1234, Output: 0:0
+•	User input: 5678, Output: 4:1
+•	User input: 5555, Output: 1:1
+•	User input: 3586, Output: 3:2
 
-import kotlin.random.Random
+Once the user guesses the correct number, the game is over.
+*/
+fun main() {
+    val generatedNumber = randomGenerator()
+    do {
+        println("Guess a 4 digit number:")
+        val input = readLine()
+        if (input != null){
+            var correctDigits = countCorrectDigits(input, generatedNumber)
+            var exactlyCorrectDigits = countExactlyCorrectDigits(input, generatedNumber)
 
-fun main(): MutableList<Int> {
-    fun randomGenerator(): Int {
-        val digits = mutableListOf<Int>(0..9)
-        var randomNumber = 0
-        for (i in 1..4) {
-            var counter = 1
-            val randomDigit = digits.random()
-            counter++
-            randomNumber = randomDigit * 10 * counter
-            digits.remove(randomDigit)
+            println("User input:" + input + ", Output: " + correctDigits.toString() + ":" + exactlyCorrectDigits.toString())
         }
-        return randomNumber
+    }while(input != generatedNumber)
+    println("Your guess was correct!")
     }
-
-    println("Guess a 4 digit number:")
-    val guess = readLine()
-    println("You guessed: $guess")
-    val randomNumber = randomGenerator()
-    val correctlyGuessed = 0
-    val correctPosition = 0
-    println("Hello World !")
-    //implizites datentypvergeben
-    var number: Int = 5
-    var name = "Slavica"
-
-    println(number)
-    println("my name is $name, nice to meet you!")
-
-
-    //val ist eine Konstante
-    val x = 12
-    val y = 4
-
-    name = "Max"
-
-    println("result = ${x + y}")
-
-    //Mark float with F
-    val a: Float = 20F
-    val b: Double = 20.0
-
-    //Minute 14:30 -> zeigt dass variable nullable ist
+fun randomGenerator(): String {
+    val digits = mutableListOf<Int>()
+    digits.addAll(0 .. 9)
+    var randomNumber = ""
+    for (i in 1..4) {
+        val randomDigit = digits.random()
+        randomNumber += randomDigit
+        digits.remove(randomDigit)
+    }
+    return randomNumber
+}
+//var vs. val: val is read only
+fun countExactlyCorrectDigits(input: String, generatedNumber: String): Int {
+    var counter = 0
+    //indices returns the range of valid character indices for this char sequence
+    for (i in input.indices){
+        if(input[i]==generatedNumber[i]){
+            counter ++
+        }
+    }
+    return counter
 }
 
-fun <T : Comparable<T>> mutableListOf(elements: ClosedRange<T>): MutableList<T> {
-
+fun countCorrectDigits(input: String, generatedNumber: String): Int {
+    var counter = 0
+    for (i in generatedNumber.indices) {
+        if(input.contains(generatedNumber[i])){
+            counter ++
+        }
+    }
+    return counter
 }
